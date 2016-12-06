@@ -1,0 +1,17 @@
+{
+  "name": "nightmare-demos",
+  "version": "1.0.0",
+  "description": "just a place to play with nightmare",
+  "main": "demo.js",
+  "dependencies": {
+    "nightmare": "^2.8.1",
+    "nightmare-helpers": "^1.0.0",
+    "nightmare-inline-download": "^0.2.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Joshua McKinney",
+  "license": "MIT"
+}
