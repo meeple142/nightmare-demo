@@ -8,22 +8,8 @@ require('nightmare-inline-download')(Nightmare);
 require('nightmare-helpers')(Nightmare);
 //switch to nightmare-download-manager for more control and feed back on download proccess
 
-var waitURL = function (urlRegEx) {
-
-    return function (nightmare) {
-        nightmare.wait(function (url) {
-            url = new RegExp(url);
-            return url.test(document.location.href);
-        }, urlRegEx);
-    }
-}
-
 //until the user interface works, we will use this for now.
 var authData = JSON.parse(fs.readFileSync("./auth.json"));
-
-
-
-
 
 
 var nightmare = Nightmare({
@@ -44,13 +30,7 @@ nightmare
     .type("#userName", authData.username)
     .type("#password", authData.password)
     .click("a.vui-button-primary")
-    //.use(waitURL("https://byui.brightspace.com/d2l/home"))
-    //.waitURL2("https://byui.brightspace.com/d2l/home")
     .waitURL("https://byui.brightspace.com/d2l/home")
-    //    .wait(function () {
-    //        //go to d2l home
-    //        return document.location.href === "https://byui.brightspace.com/d2l/home";
-    //    })
     //go to check box page 
     .goto("https://byui.brightspace.com/d2l/lms/importExport/export/export_select_components.d2l?ou=" + ou)
     .wait('input[name="checkAll"]')
@@ -60,13 +40,16 @@ nightmare
     .wait(function (ou) {
         return document.location.href === "https://byui.brightspace.com/d2l/lms/importExport/export/export_select_confirm.d2l?ou=" + ou;
     }, ou)
+    .setWaitTimeout(0, 10, 0)
     .wait('.vui-button-primary')
     .check('input[name="exportFiles"]')
     .click('.vui-button-primary')
     //go to zipping proccess page
+    .setWaitTimeout(0, 0, 20)
     .wait(function (ou) {
         return document.location.href === "https://byui.brightspace.com/d2l/lms/importExport/export/export_process.d2l?ou=" + ou;
     }, ou)
+    .setWaitTimeout(20, 0, 0)
     .wait('.vui-button-primary[aria-disabled="false"]')
     .click('a.vui-button-primary')
     //go to export_summary
@@ -76,10 +59,11 @@ nightmare
     .wait('form a.vui-link')
     .click('form a.vui-link')
     .download("./" + ou + "_export.zip")
-    //.end()
+    .end()
     .then(function () {
         console.log("done");
     })
     .catch(function (error) {
+        console.error("WOW!");
         console.error(error);
     });
