@@ -5,6 +5,7 @@ var fs = require('fs'),
     Nightmare = require('nightmare');
 
 require('nightmare-inline-download')(Nightmare);
+require('nightmare-helpers')(Nightmare);
 //switch to nightmare-download-manager for more control and feed back on download proccess
 
 var waitURL = function (urlRegEx) {
@@ -22,15 +23,6 @@ var authData = JSON.parse(fs.readFileSync("./auth.json"));
 
 
 
-Nightmare.prototype.waitURL = function (url) {
-    this.wait(function (url) {
-        url = new RegExp(url);
-        return url.test(document.location.href);
-    }, url);
-
-    return this;
-
-}
 
 
 
